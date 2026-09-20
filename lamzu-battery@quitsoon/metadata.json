@@ -1,0 +1,6 @@
+{
+  "uuid": "lamzu-battery@quitsoon",
+  "name": "Lamzu Battery",
+  "description": "Shows the battery level of a Lamzu mouse in the top bar.",
+  "shell-version": ["45", "46", "47", "48", "49", "50", "51"]
+}
