@@ -19,25 +19,19 @@ mouse's `hidraw` node directly. There are no third-party dependencies.
 
 ## Installation
 
-**1. Get the files**
+**1. Get the files and copy them to the gnome extension folder**
 
 ```bash
-git clone https://github.com/Quitsoon/gnome-shell-extension-lamzu-battery \
-  ~/.local/share/gnome-shell/extensions/lamzu-battery@quitsoon
+git clone https://github.com/Quitsoon/gnome-shell-extension-lamzu-battery
+cp -r gnome-shell-extension-lamzu-battery/lamzu-battery@quitsoon ~/.local/share/gnome-shell/extensions/
 ```
 
-**2. Install the udev rule**
+**2. Copy the udev rule**
 
 Without it, the script can't read the mouse and the extension shows a red `!`.
 
-```bash
-cd ~/.local/share/gnome-shell/extensions/lamzu-battery@quitsoon
-sudo cp 99-lamzu.rules /etc/udev/rules.d/
-sudo udevadm control --reload && sudo udevadm trigger
-```
-
-Then unplug and replug the dongle (or the cable). The rule uses `uaccess`, which
-gives access only to the user logged in at the machine.
+I used this repo : [passionofcrisis/Lamzu-Webdriver-Aurora-Linux-fix](https://github.com/passionofcrisis/Lamzu-Webdriver-Aurora-Linux-fix)
+This one should work too : [ak4duy/lamzu-linux-udev](https://github.com/ak4duy/lamzu-linux-udev)
 
 **3. Restart GNOME Shell and enable the extension**
 
