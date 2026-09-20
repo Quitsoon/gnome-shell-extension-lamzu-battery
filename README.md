@@ -1,0 +1,102 @@
+# Lamzu Battery – GNOME Shell extension
+
+Shows the battery level of a Lamzu mouse in the GNOME top bar.
+
+- Percentage next to a mouse icon, colored by level (green / yellow / red)
+- ⚡ indicator while charging
+- Desktop notifications when the mouse is fully charged or running low
+- Works with the wireless dongle and with the wired connection
+- Click the icon to see the status and refresh manually
+
+The extension calls a small Python script (`lamzu-battery.py`) that talks to the
+mouse's `hidraw` node directly. There are no third-party dependencies.
+
+## Requirements
+
+- GNOME Shell 45 to 51
+- `python3`
+- A Lamzu mouse with USB vendor ID `373E` (dongle: product ID `001E`, wired: `001C`)
+
+## Installation
+
+Replace `YOURNAME` with your GitHub username in the commands below, and make sure the
+`uuid` in `metadata.json` is `lamzu-battery@YOURNAME`. The folder name must match it exactly.
+
+**1. Get the files**
+
+```bash
+git clone https://github.com/YOURNAME/gnome-shell-extension-lamzu-battery \
+  ~/.local/share/gnome-shell/extensions/lamzu-battery@YOURNAME
+```
+
+**2. Install the udev rule**
+
+Without it, the script can't read the mouse and the extension shows a red `!`.
+
+```bash
+cd ~/.local/share/gnome-shell/extensions/lamzu-battery@YOURNAME
+sudo cp 99-lamzu.rules /etc/udev/rules.d/
+sudo udevadm control --reload && sudo udevadm trigger
+```
+
+Then unplug and replug the dongle (or the cable). The rule uses `uaccess`, which
+gives access only to the user logged in at the machine.
+
+**3. Restart GNOME Shell and enable the extension**
+
+- Wayland: log out and back in
+- X11: press `Alt+F2`, type `r`, press Enter
+
+```bash
+gnome-extensions enable lamzu-battery@YOURNAME
+```
+
+## Usage
+
+The top bar shows the current level. Values:
+
+| Display | Meaning |
+|---------|---------|
+| `87%` | Battery level (green above 50%, yellow up to 50%, red at 20% or below) |
+| `87% ⚡` | Charging |
+| `--` | Mouse not found or asleep |
+| `!` | No permission on `/dev/hidraw*` (udev rule missing) |
+
+The level is refreshed every 60 seconds while discharging, and every 15 seconds while
+charging or when the mouse can't be found.
+
+### Command line
+
+The script also works on its own:
+
+```bash
+python3 lamzu-battery.py              # 87% or 87% (charging)
+python3 lamzu-battery.py --json       # {"percent": 87, "charging": false, "mode": "dongle"}
+python3 lamzu-battery.py --watch 30   # refresh every 30 s
+python3 lamzu-battery.py --debug      # list matching hidraw nodes
+```
+
+Exit codes: `0` ok, `1` mouse not found or no valid response, `2` permission denied.
+
+## Troubleshooting
+
+- **Red `!` in the top bar**: the udev rule is missing or wasn't applied. Redo step 2 and replug the mouse.
+- **`--` in the top bar**: run `python3 lamzu-battery.py --debug`. If it lists no hidraw node, the mouse isn't detected (asleep, unplugged, or a different vendor/product ID).
+- **Extension doesn't appear**: check that the folder name matches the `uuid` in `metadata.json`, then restart the shell. `journalctl -f -o cat /usr/bin/gnome-shell` shows errors.
+
+## Uninstall
+
+```bash
+gnome-extensions disable lamzu-battery@YOURNAME
+rm -rf ~/.local/share/gnome-shell/extensions/lamzu-battery@YOURNAME
+sudo rm /etc/udev/rules.d/99-lamzu.rules
+```
+
+## Credits
+
+The HID protocol handling in `lamzu-battery.py` is a Linux port of
+[Sheroune/lamzu-battery-monitory](https://github.com/Sheroune/lamzu-battery-monitory) (MIT).
+
+## License
+
+[MIT](LICENSE)
