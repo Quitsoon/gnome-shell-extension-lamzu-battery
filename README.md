@@ -19,14 +19,11 @@ mouse's `hidraw` node directly. There are no third-party dependencies.
 
 ## Installation
 
-Replace `YOURNAME` with your GitHub username in the commands below, and make sure the
-`uuid` in `metadata.json` is `lamzu-battery@YOURNAME`. The folder name must match it exactly.
-
 **1. Get the files**
 
 ```bash
-git clone https://github.com/YOURNAME/gnome-shell-extension-lamzu-battery \
-  ~/.local/share/gnome-shell/extensions/lamzu-battery@YOURNAME
+git clone https://github.com/Quitsoon/gnome-shell-extension-lamzu-battery \
+  ~/.local/share/gnome-shell/extensions/lamzu-battery@quitsoon
 ```
 
 **2. Install the udev rule**
@@ -34,7 +31,7 @@ git clone https://github.com/YOURNAME/gnome-shell-extension-lamzu-battery \
 Without it, the script can't read the mouse and the extension shows a red `!`.
 
 ```bash
-cd ~/.local/share/gnome-shell/extensions/lamzu-battery@YOURNAME
+cd ~/.local/share/gnome-shell/extensions/lamzu-battery@quitsoon
 sudo cp 99-lamzu.rules /etc/udev/rules.d/
 sudo udevadm control --reload && sudo udevadm trigger
 ```
@@ -48,7 +45,7 @@ gives access only to the user logged in at the machine.
 - X11: press `Alt+F2`, type `r`, press Enter
 
 ```bash
-gnome-extensions enable lamzu-battery@YOURNAME
+gnome-extensions enable lamzu-battery@quitsoon
 ```
 
 ## Usage
@@ -87,8 +84,8 @@ Exit codes: `0` ok, `1` mouse not found or no valid response, `2` permission den
 ## Uninstall
 
 ```bash
-gnome-extensions disable lamzu-battery@YOURNAME
-rm -rf ~/.local/share/gnome-shell/extensions/lamzu-battery@YOURNAME
+gnome-extensions disable lamzu-battery@quitsoon
+rm -rf ~/.local/share/gnome-shell/extensions/lamzu-battery@quitsoon
 sudo rm /etc/udev/rules.d/99-lamzu.rules
 ```
 
